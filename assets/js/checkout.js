@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import _, { min } from 'lodash';
+
 import swal from './theme/global/sweet-alert';
+
 
 import utils from '@bigcommerce/stencil-utils';
 
@@ -345,8 +347,10 @@ function checkProducts() {
                     swal.fire({
                         text: "As a new client, some restrictions are placed on your account for your first three orders. After your first three orders, restrictions on your cart total will be removed. If you would like to pay using a credit card, please reduce your cart total to under $500.00, or reduce the number of hairpieces in your cart to 2 or less.",
                         icon: 'info',                        
-                    })
+                    }
+                    )
                     isPopup=true;
+                    
                 }
                 setInterval(() => {
                     $(".checkout-step--payment").find(".checkout-view-content").length > 0 &&
