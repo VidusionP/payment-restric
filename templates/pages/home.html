@@ -302,7 +302,9 @@ blog:
             {{> components/halothemes/home/halo-banner banner="home-top-brands"}}
             {{> components/halothemes/home/halo-banner banner="home-top-banners"}}
             {{> components/halothemes/home/halo-banner banner="home2-top-banners"}}
-            {{> components/halothemes/home/home-icon-with-text}}
+
+            <!-- {{> components/halothemes/home/home-icon-with-text}} -->
+
             {{> components/halothemes/home/halo-special-product title=theme_settings.home_product_block_special-title desc=theme_settings.home_product_block_special-text id=theme_settings.home_product_block_special-id}}
             {{> components/halothemes/home/halo-banner banner="home-middle-banners"}}
             {{#if theme_settings.home_product_block '==' 'Featured'}}
@@ -367,8 +369,12 @@ blog:
                 cateBtn=theme_settings.home_product_block_with_banner-3-btntext 
                 cateLink=theme_settings.home_product_block_with_banner-3-link
             }}
-
+            <div style="height: 50px;"></div>
             {{> components/halothemes/home/halo-banner banner="home-bottom-banners"}}
+            
+            <!-- Added -->
+            {{> components/halothemes/home/home-icon-with-text}}
+
 
             <div class="faq-container">
                 <div class="title" pc>Preguntas frecuentes</div>
@@ -509,7 +515,6 @@ blog:
             fetch(`/content/data/homepage-faq.eu.json`)
             .then(r=>r.json())
             .then(r=>{
-                console.log(r);
                 if (r.length>0){
                     let ct="";
                     for (let faq of r) {

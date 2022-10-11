@@ -2,8 +2,6 @@ import $ from 'jquery';
 import _, { min } from 'lodash';
 
 import swal from './theme/global/sweet-alert';
-
-
 import utils from '@bigcommerce/stencil-utils';
 
 var allureException = [
@@ -40,7 +38,7 @@ var skus=[];
 var teamdeskItems = null;
 var teamdeskPOItems = null;
 var pShippingGroup={};
-var isPopup=false;
+
 
 /**
  * Get the inventory and po from teamdesk
@@ -265,7 +263,6 @@ function cartSetDelivery() {
 }
 function checkProducts() {
     let token = $("[name=store-token]").val();
-    console.log(cartItems);
     if (cartItems) {
         let ids = cartItems.lineItems.physicalItems.map(i=>i.productId);        
         fetch('/graphql', {
@@ -321,13 +318,15 @@ function checkProducts() {
                                 totalhp += item.quantity;
                             }
                         }         
-                    console.log(totalhp)
                 }  
-                setShipment((cartItems.baseAmount) > 500 || totalhp>2);
+                setShipment((cartItems.baseAmount) > 500 || totalhp > 2);
             }else {
                 setShipment();
             }
          })
+         .catch(error => {
+            setShipment();
+        });
     }
 }
 
@@ -339,19 +338,13 @@ function checkProducts() {
  function setShipment(isLarger=false) {  
   
     let group = $("[name=customer-group]").val();
-    // console.log(isLarger)
     switch (group) {
         case "Newcomer":
             if (isLarger) {
-                if (isPopup==false) {
-                    swal.fire({
-                        text: "As a new client, some restrictions are placed on your account for your first three orders. After your first three orders, restrictions on your cart total will be removed. If you would like to pay using a credit card, please reduce your cart total to under $500.00, or reduce the number of hairpieces in your cart to 2 or less.",
+                    return swal.fire({
+                        text: "Como cliente nuevo se han impuesto algunas restricciones en su cuenta durante los tres primeros pedidos. Después de estos pedidos, se eliminarán todas las restricciones en su carrito de compra. Si desea pagar con tarjeta de crédito, por favor reduzca el valor total a menos de 500 €, o reduzca la cantidad de prótesis capilares en su carrito a 2 ó menos.",
                         icon: 'info',                        
-                    }
-                    )
-                    isPopup=true;
-                    
-                }
+                    }),             
                 setInterval(() => {
                     $(".checkout-step--payment").find(".checkout-view-content").length > 0 &&
                         $(".checkout-step--payment")
@@ -363,13 +356,10 @@ function checkProducts() {
                             );
                         })
                         .css("display", "none");
-                    
-                    
                 }, 500);
             } 
             break;
         case 'Blocklist':
-            if (isLarger) {
             setInterval(() => {
                 $(".checkout-step--payment").find(".checkout-view-content").length > 0 &&
                     $(".checkout-step--payment")
@@ -382,7 +372,6 @@ function checkProducts() {
                         })
                         .css("display", "none");
             }, 500);
-        }
             break;
     }
 }
@@ -399,7 +388,9 @@ window.addEventListener("DOMContentLoaded", function() {
             };      
             let group = $("[name=customer-group]").val();
             if (group) {
-                if (group == "Blocklist" || "Newcomer") {
+                if (group == "Blocklist") {
+                    setShipment()
+                } else {
                     checkProducts()
                 }
             }      
